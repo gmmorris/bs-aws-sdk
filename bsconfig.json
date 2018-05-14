@@ -1,0 +1,12 @@
+{
+  "name": "@gmmorris/bs-aws-sdk",
+  "version": "0.1.0",
+  "bsc-flags": [
+    // "-bs-no-version-header"
+  ],
+  "sources": {
+    "dir": "src",
+    "subdirs": true
+  },
+  "refmt": 3
+}

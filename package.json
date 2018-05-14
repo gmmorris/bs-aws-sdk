@@ -1,0 +1,21 @@
+{
+  "name": "@gmmorris/bs-aws-sdk",
+  "version": "0.1.0",
+  "description": "BuckleScript bindings to the AWS SDK",
+  "scripts": {
+    "build": "bsb -make-world",
+    "start": "bsb -make-world -w",
+    "clean": "bsb -clean-world"
+  },
+  "keywords": [
+    "BuckleScript"
+  ],
+  "author": "Gidi Morris <gidi@gidi.io>",
+  "license": "MIT",
+  "devDependencies": {
+    "bs-platform": "^3.0.0"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.237.1"
+  }
+}
