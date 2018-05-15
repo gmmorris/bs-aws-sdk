@@ -1,43 +1,31 @@
 module AWS = {
   module S3 = {
+    /* type acl =
+       [@bs.string] [
+         | [@bs.as "private"] `Private
+         | [@bs.as "public-read"] `PublicRead
+         | [@bs.as "public-read-write"] `PublicReadWrite
+         | [@bs.as "authenticated-read"] `AuthenticatedRead
+         | [@bs.as "aws-exec-read"] `AwsExecRead
+         | [@bs.as "bucket-owner-read"] `BucketOwnerRead
+         | [@bs.as "bucket-owner-full-control"] `BucketOwnerFullControl
+       ]; */
     [@bs.deriving abstract]
     type putObjectRequest = {
-      /**
-               * The canned ACL to apply to the object.
-               */ [@bs.as
-                                                                    "ACL"
-                                                                    ]
-      accessControlPolicy:
-        [@bs.string] [
-          | [@bs.as "private"] `Private
-          | [@bs.as "public-read"] `PublicRead
-          | [@bs.as "public-read-write"] `PublicReadWrite
-          | [@bs.as "authenticated-read"] `AuthenticatedRead
-          | [@bs.as "aws-exec-read"] `AwsExecRead
-          | [@bs.as "bucket-owner-read"] `BucketOwnerRead
-          | [@bs.as "bucket-owner-full-control"] `BucketOwnerFullControl
-        ],
-      /**
-               * Object data.
-               */ [@bs.as "Body"]
+      /*  The canned ACL to apply to the object. */
+      [@bs.as "ACL"]
+      accessControlPolicy: string,
+      /* Object data. */
+      [@bs.as "Body"]
       body: string,
-      /**
-               * Name of the bucket to which the PUT operation was initiated.
-               */ [@bs.as
-                                                                    "Bucket"
-                                                                    ]
+      /* Name of the bucket to which the PUT operation was initiated. */
+      [@bs.as "Bucket"]
       bucket: string,
-      /**
-               * A standard MIME type describing the format of the object data.
-               */ [@bs.as
-                                                                    "ContentType"
-                                                                    ]
+      /* A standard MIME type describing the format of the object data. */
+      [@bs.as "ContentType"]
       contentType: string,
-      /**
-               * Object key for which the PUT operation was initiated.
-               */ [@bs.as
-                                                                    "Key"
-                                                                    ]
+      /* Object key for which the PUT operation was initiated. */
+      [@bs.as "Key"]
       key: string,
     };
     module ManagedUpload = {
@@ -47,22 +35,22 @@ module AWS = {
                  * URL of the uploaded object.
                  */
         [@bs.get]
-        external location : t => string = "";
+        external location : t => string = "Location";
         /**
                  * ETag of the uploaded object.
                  */
         [@bs.get]
-        external eTag : t => string = "";
+        external eTag : t => string = "ETag";
         /**
                  * Bucket to which the object was uploaded.
                  */
         [@bs.get]
-        external bucket : t => string = "";
+        external bucket : t => string = "Bucket";
         /**
                  * Key to which the object was uploaded.
                  */
         [@bs.get]
-        external key : t => string = "";
+        external key : t => string = "Key";
       };
     };
     type t;
@@ -72,7 +60,7 @@ module AWS = {
       (
         t,
         putObjectRequest,
-        (option(Js_exn.t), [@bs.obj] ManagedUpload.SendData.t) => unit
+        (Js.Nullable.t(Js_exn.t), [@bs.obj] ManagedUpload.SendData.t) => unit
       ) =>
       unit =
       "upload";
@@ -82,15 +70,15 @@ module AWS = {
 
 let por =
   AWS.S3.putObjectRequest(
-    ~accessControlPolicy=`Private,
+    ~accessControlPolicy="private",
     ~body="{\"blocked_creatives\":[{\"adid\":\"1234567890\"}]}",
     ~bucket="test-exchange-config-eu.unrulymedia.com",
     ~contentType="application/json",
-    ~key="test/test.json",
+    ~key="test/test5.json",
   );
 
 AWS.S3.uploadWithCallback(AWS.s3(), por, (e, data) =>
-  switch (e) {
+  switch (Js.Nullable.toOption(e)) {
   | Some(err) =>
     Js.log(
       switch (Js.Exn.message(err)) {
