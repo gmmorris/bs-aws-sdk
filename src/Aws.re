@@ -1,56 +1,68 @@
 module AWS = {
   module S3 = {
-    /* type acl =
-       [@bs.string] [
-         | [@bs.as "private"] `Private
-         | [@bs.as "public-read"] `PublicRead
-         | [@bs.as "public-read-write"] `PublicReadWrite
-         | [@bs.as "authenticated-read"] `AuthenticatedRead
-         | [@bs.as "aws-exec-read"] `AwsExecRead
-         | [@bs.as "bucket-owner-read"] `BucketOwnerRead
-         | [@bs.as "bucket-owner-full-control"] `BucketOwnerFullControl
-       ]; */
-    [@bs.deriving abstract]
+    [@bs.deriving jsConverter]
+    type acl = [
+      | [@bs.as "private"] `Private
+      | [@bs.as "public-read"] `PublicRead
+      | [@bs.as "public-read-write"] `PublicReadWrite
+      | [@bs.as "authenticated-read"] `AuthenticatedRead
+      | [@bs.as "aws-exec-read"] `AwsExecRead
+      | [@bs.as "bucket-owner-read"] `BucketOwnerRead
+      | [@bs.as "bucket-owner-full-control"] `BucketOwnerFullControl
+    ];
+    [@bs.deriving jsConverter]
     type putObjectRequest = {
       /*  The canned ACL to apply to the object. */
-      [@bs.as "ACL"]
-      accessControlPolicy: string,
+      _ACL: acl,
       /* Object data. */
-      [@bs.as "Body"]
-      body: string,
+      _Body: string,
       /* Name of the bucket to which the PUT operation was initiated. */
-      [@bs.as "Bucket"]
-      bucket: string,
+      _Bucket: string,
       /* A standard MIME type describing the format of the object data. */
-      [@bs.as "ContentType"]
-      contentType: string,
+      _ContentType: string,
       /* Object key for which the PUT operation was initiated. */
-      [@bs.as "Key"]
-      key: string,
+      _Key: string,
     };
+    [@bs.obj]
+    external uploadOptions :
+      (
+        ~_ACL: string=?,
+        ~_Body: string=?,
+        ~_Bucket: string=?,
+        ~_ContentType: string=?,
+        ~_Key: string=?,
+        unit
+      ) =>
+      putObjectRequest =
+      "";
+    let uploadOptions =
+        (
+          ~accessControlPolicy=?,
+          ~body=?,
+          ~bucket=?,
+          ~contentType=?,
+          ~key=?,
+          (),
+        ) =>
+      uploadOptions(
+        ~_ACL=?Belt.Option.map(accessControlPolicy, aclToJs),
+        ~_Body=?body,
+        ~_Bucket=?bucket,
+        ~_ContentType=?contentType,
+        ~_Key=?key,
+        (),
+      );
     module ManagedUpload = {
       module SendData = {
         type t;
-        /**
-                 * URL of the uploaded object.
-                 */
-        [@bs.get]
-        external location : t => string = "Location";
-        /**
-                 * ETag of the uploaded object.
-                 */
-        [@bs.get]
-        external eTag : t => string = "ETag";
-        /**
-                 * Bucket to which the object was uploaded.
-                 */
-        [@bs.get]
-        external bucket : t => string = "Bucket";
-        /**
-                 * Key to which the object was uploaded.
-                 */
-        [@bs.get]
-        external key : t => string = "Key";
+        /* URL of the uploaded object. */
+        [@bs.get] external location : t => string = "Location";
+        /* ETag of the uploaded object. */
+        [@bs.get] external eTag : t => string = "ETag";
+        /* Bucket to which the object was uploaded. */
+        [@bs.get] external bucket : t => string = "Bucket";
+        /* Key to which the object was uploaded. */
+        [@bs.get] external key : t => string = "Key";
       };
     };
     type t;
@@ -60,34 +72,12 @@ module AWS = {
       (
         t,
         putObjectRequest,
-        (Js.Nullable.t(Js_exn.t), [@bs.obj] ManagedUpload.SendData.t) => unit
+        [@bs.uncurry] (
+          (Js.Nullable.t(Js.Exn.t), ManagedUpload.SendData.t) => unit
+        )
       ) =>
       unit =
       "upload";
   };
   [@bs.module "aws-sdk"] [@bs.new] external s3 : unit => S3.t = "S3";
 };
-
-let por =
-  AWS.S3.putObjectRequest(
-    ~accessControlPolicy="private",
-    ~body="{\"blocked_creatives\":[{\"adid\":\"1234567890\"}]}",
-    ~bucket="test-exchange-config-eu.unrulymedia.com",
-    ~contentType="application/json",
-    ~key="test/test5.json",
-  );
-
-AWS.S3.uploadWithCallback(AWS.s3(), por, (e, data) =>
-  switch (Js.Nullable.toOption(e)) {
-  | Some(err) =>
-    Js.log(
-      switch (Js.Exn.message(err)) {
-      | Some(m) => m
-      | None => "Weird error"
-      },
-    )
-  | None =>
-    Js.log(AWS.S3.ManagedUpload.SendData.location(data));
-    Js.log(data);
-  }
-);
