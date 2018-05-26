@@ -1,0 +1,36 @@
+bs_package_flags = -bs-package-name @gmmorris/bs-aws-sdk
+src_root_dir = /Volumes/ook/development/reasonml/bs-aws-sdk
+bsc = /Volumes/ook/development/reasonml/bs-aws-sdk/node_modules/bs-platform/lib/bsc.exe
+bsdep = /Volumes/ook/development/reasonml/bs-aws-sdk/node_modules/bs-platform/lib/bsb_helper.exe
+warnings = -w -30-40+6+7+27+32..39+44+45+101
+bsc_flags = -bs-suffix -nostdlib -I '/Volumes/ook/development/reasonml/bs-aws-sdk/node_modules/bs-platform/lib/ocaml' -no-alias-deps -color always
+ppx_flags = 
+bs_package_includes = 
+bs_package_dev_includes = 
+namespace = 
+bsb_dir_group = 0
+refmt = /Volumes/ook/development/reasonml/bs-aws-sdk/node_modules/bs-platform/lib/refmt.exe
+reason_react_jsx = 
+refmt_flags = --print binary
+bsc_lib_includes = -I src
+rule build_ast_and_module_sets_from_re
+  command = ${bsc} -pp "${refmt} ${refmt_flags}" ${reason_react_jsx}  ${ppx_flags} ${warnings} ${bsc_flags} -c -o ${out} -bs-syntax-only -bs-binary-ast -impl ${in}
+  description = [34mBuilding[39m [2m${out}[22m
+build src/Aws.mlast : build_ast_and_module_sets_from_re $src_root_dir/src/Aws.re
+rule build_deps
+  command = ${bsdep} ${namespace} -g ${bsb_dir_group} -MD ${in}
+  description = [34mBuilding[39m [2m${out}[22m
+build src/Aws.mlast.d : build_deps src/Aws.mlast
+rule build_cmj_cmi
+  command = ${bsc} ${bs_package_flags} -bs-assume-no-mli -bs-no-builtin-ppx-ml -bs-no-implicit-include ${bs_package_includes} ${bsc_lib_includes} ${bsc_extra_includes} ${warnings} ${bsc_flags} -o ${out} -c  ${in} $postbuild
+  depfile = ${in}.d
+  description = [34mBuilding[39m [2m${out}[22m
+build src/Aws.cmj |  $src_root_dir/lib/js/src/Aws.bs.js src/Aws.cmi : build_cmj_cmi src/Aws.mlast
+  bsc_flags = $bsc_flags -bs-re-out -bs-super-errors
+  bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/src
+build src/S3Re.mlast : build_ast_and_module_sets_from_re $src_root_dir/src/S3Re.re
+build src/S3Re.mlast.d : build_deps src/S3Re.mlast
+build src/S3Re.cmj |  $src_root_dir/lib/js/src/S3Re.bs.js src/S3Re.cmi : build_cmj_cmi src/S3Re.mlast
+  bsc_flags = $bsc_flags -bs-re-out -bs-super-errors
+  bs_package_flags = $bs_package_flags  -bs-package-output commonjs:lib/js/src
+build build.ninja : phony  ||  src/S3Re.mlast.d src/Aws.mlast.d

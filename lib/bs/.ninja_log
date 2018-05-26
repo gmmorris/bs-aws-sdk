@@ -1,0 +1,11 @@
+# ninja log v5
+0	43	1527366615	src/Aws.mlast	ab3ea471d42698c
+1	44	1527366615	src/S3Re.mlast	749e9591a18d76e6
+43	51	1527366615	src/Aws.mlast.d	bac713204440105b
+44	51	1527366615	src/S3Re.mlast.d	2d20042f0d2e239f
+0	21	1527366615	src/S3Re.cmj	7acd44e10aa940a5
+0	21	1527366615	/Volumes/ook/development/reasonml/bs-aws-sdk/lib/js/src/S3Re.bs.js	7acd44e10aa940a5
+0	21	1527366615	src/S3Re.cmi	7acd44e10aa940a5
+21	35	1527366615	src/Aws.cmj	e9eda970101ffe1f
+21	35	1527366615	/Volumes/ook/development/reasonml/bs-aws-sdk/lib/js/src/Aws.bs.js	e9eda970101ffe1f
+21	35	1527366615	src/Aws.cmi	e9eda970101ffe1f
