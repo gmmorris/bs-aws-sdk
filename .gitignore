@@ -1,4 +1,5 @@
 .vscode
 .merlin
 node_modules
+lib
 .bsb.lock
