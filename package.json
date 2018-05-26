@@ -10,6 +10,10 @@
   "keywords": [
     "BuckleScript"
   ],
+  "files": [
+    "src/",
+    "bsconfig.json"
+  ],
   "author": "Gidi Morris <gidi@gidi.io>",
   "license": "MIT",
   "devDependencies": {
