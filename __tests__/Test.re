@@ -11,7 +11,7 @@ let rewiredModule =
     Node.Process.process##cwd() ++ "/lib/js/__tests__/S3_upload.bs.js",
   );
 
-describe("S3_upload", () =>
+describe("S3", () =>
   testPromise("upload", () => {
     let expected = [%raw
       {|
