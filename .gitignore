@@ -3,3 +3,4 @@
 node_modules
 lib
 .bsb.lock
+package-lock.json
