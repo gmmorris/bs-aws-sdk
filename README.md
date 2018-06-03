@@ -1,18 +1,23 @@
-# Basic Reason Template
+# bs-aws-sdkexpress
 
-Hello! This project allows you to quickly get started with Reason and BuckleScript. If you wanted a more sophisticated version, try the `react` template (`bsb -theme react -init .`).
+AWS SDK bindings for [BuckleScript](https://github.com/bloomberg/bucklescript) in [Reason](https://github.com/facebook/reason).
 
-# Build
+## Getting Started
+Install bs-aws-sdk using npm:
 ```
-npm run build
+npm install --save bs-aws-sdk
 ```
+Then add bs-aws-sdk as a dependency to `bsconfig.json`
 
-# Build + Watch
+Right now the library is at early stages, pull requests are welcome.
 
+### Run the example and tests:
+
+Build and start the server:
 ```
-npm run start
+npm start
 ```
-
-
-# Editor
-If you use `vscode`, Press `Windows + Shift + B` it will build automatically
+Run the tests:
+```
+npm test
+```

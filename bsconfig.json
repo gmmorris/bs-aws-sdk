@@ -3,9 +3,23 @@
   "version": "0.1.0",
   "bsc-flags": [],
   "suffix": ".bs.js",
-  "sources": {
-    "dir": "src",
-    "subdirs": true
+  "sources": [
+    {
+      "dir": "src",
+      "subdirs": true
+    },
+    {
+      "dir": "__tests__",
+      "type": "dev"
+    }
+  ],
+  "bs-dev-dependencies": [
+    "@glennsl/bs-jest",
+    "@gmmorris/bs-rewire",
+    "bs-node"
+  ],
+  "package-specs": {
+    "module": "commonjs"
   },
   "refmt": 3
 }

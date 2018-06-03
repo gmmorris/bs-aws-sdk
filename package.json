@@ -5,19 +5,28 @@
   "scripts": {
     "build": "bsb -make-world",
     "start": "bsb -make-world -w",
-    "clean": "bsb -clean-world"
+    "clean": "bsb -clean-world",
+    "unit": "jest .*Test.bs.js",
+    "test": "npm run clean && npm run build && npm run unit",
+    "watch:bsb": "npm start",
+    "watch:jest": "jest .*Test.bs.js --watchAll",
+    "watch:screen": "screen -c .screenrc"
   },
   "keywords": [
     "BuckleScript"
   ],
   "files": [
     "src/",
+    "__tests__/",
     "bsconfig.json"
   ],
   "author": "Gidi Morris <gidi@gidi.io>",
   "license": "MIT",
   "devDependencies": {
-    "bs-platform": "^3.0.0"
+    "@glennsl/bs-jest": "^0.4.2",
+    "@gmmorris/bs-rewire": "^0.2.0",
+    "bs-platform": "^3.0.0",
+    "bs-node": "github:reasonml-community/bs-node"
   },
   "dependencies": {
     "aws-sdk": "^2.237.1"
