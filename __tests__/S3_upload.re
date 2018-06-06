@@ -1,8 +1,27 @@
 exception InvalidTestFile;
 
+open Rewire;
+
+module Tests = {
+  include
+    MakeRewired(
+      {
+        type t;
+      },
+    );
+  [@bs.send] external uploadWithOptions : t => unit = "";
+};
+
+module Rewiring = {
+  include MakeModuleRewiring(Tests);
+};
+
+let mockAwsSdk = (rewiredModule, mockModule) =>
+  Tests.withRewiringOver(rewiredModule, "AwsSdk", mockModule);
+
 let rewiredModule = () =>
   switch ([%bs.node __filename]) {
-  | Some(modulePath) => MockAws.Rewiring.rewire(modulePath)
+  | Some(modulePath) => Rewiring.rewire(modulePath)
   | None => raise(InvalidTestFile)
   };
 

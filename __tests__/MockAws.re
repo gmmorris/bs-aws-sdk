@@ -1,19 +1,3 @@
-open Rewire;
-
-module RewiredTestModule = {
-  include
-    MakeRewired(
-      {
-        type t;
-      },
-    );
-  [@bs.send] external uploadWithOptions : t => unit = "";
-};
-
-module Rewiring = {
-  include MakeModuleRewiring(RewiredTestModule);
-};
-
 module AwsSdk = {
   type upload = string => unit;
   [@bs.deriving abstract]
@@ -22,6 +6,3 @@ module AwsSdk = {
   [@bs.deriving abstract]
   type aws = {_S3: s3};
 };
-
-let mockAwsSdk = (rewiredModule, mockModule) =>
-  RewiredTestModule.withRewiringOver(rewiredModule, "AwsSdk", mockModule);
