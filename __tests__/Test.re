@@ -2,7 +2,7 @@ open Jest;
 
 open MockAws;
 
-let rewiredModule = S3_upload.rewiredModule();
+let rewiredModule = S3_upload.rewire();
 
 describe("S3", () =>
   testAsync("uploadWithOptions", assertThat => {
@@ -27,6 +27,6 @@ describe("S3", () =>
         )
       ),
     ) @@
-    (() => S3_upload.Tests.uploadWithOptions(rewiredModule));
+    (() => rewiredModule |> S3_upload.Rewiring.Tests.uploadWithOptions);
   })
 );

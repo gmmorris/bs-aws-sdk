@@ -2,29 +2,6 @@ exception InvalidTestFile;
 
 open Rewire;
 
-module Tests = {
-  include
-    MakeRewired(
-      {
-        type t;
-      },
-    );
-  [@bs.send] external uploadWithOptions : t => unit = "";
-};
-
-module Rewiring = {
-  include MakeModuleRewiring(Tests);
-};
-
-let mockAwsSdk = (rewiredModule, mockModule) =>
-  Tests.withRewiringOver(rewiredModule, "AwsSdk", mockModule);
-
-let rewiredModule = () =>
-  switch ([%bs.node __filename]) {
-  | Some(modulePath) => Rewiring.rewire(modulePath)
-  | None => raise(InvalidTestFile)
-  };
-
 let uploadWithOptions = () =>
   Aws.S3.s3()
   |> Aws.S3.upload(
@@ -37,3 +14,25 @@ let uploadWithOptions = () =>
          (),
        ),
      );
+
+module Rewiring = {
+  module Tests = {
+    include
+      MakeRewired(
+        {
+          type t;
+        },
+      );
+    [@bs.send] external uploadWithOptions : t => unit = "";
+  };
+  include MakeModuleRewiring(Tests);
+};
+
+let mockAwsSdk = (rewiredModule, mockModule) =>
+  Rewiring.Tests.withRewiringOver(rewiredModule, "AwsSdk", mockModule);
+
+let rewire = () =>
+  switch ([%bs.node __filename]) {
+  | Some(modulePath) => Rewiring.rewire(modulePath)
+  | None => raise(InvalidTestFile)
+  };
