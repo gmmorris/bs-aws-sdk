@@ -2,13 +2,10 @@ open Jest;
 
 open MockAws;
 
-let rewiredModule =
-  MockAws.Rewiring.rewire(
-    Node.Process.process##cwd() ++ "/lib/js/__tests__/S3_upload.bs.js",
-  );
+let rewiredModule = S3_upload.rewiredModule();
 
 describe("S3", () =>
-  testPromise("upload", () => {
+  testPromise("uploadWithOptions", () => {
     let expected = [%raw
       {|
         {
@@ -20,19 +17,16 @@ describe("S3", () =>
         }
       |}
     ];
-    Js.Promise.make((~resolve, ~reject) => {
-      let mockModule =
-        AwsSdk.(
-          aws(~_S3=() =>
-            s3Instance(~upload=options =>
-              resolve(. Expect.(expect(options) |> toEqual(expected)))
-              |> ignore
-            )
-          )
-        );
-      mockAwsSdk(rewiredModule, mockModule, () =>
-        RewiredTestModule.uploadWithOptions(rewiredModule)
+    let onUploadToS3AssertThat = assertThat =>
+      mockAwsSdk(
+        rewiredModule,
+        AwsSdk.(aws(~_S3=() => s3Instance(~upload=assertThat))),
       );
-    });
+    Js.Promise.make((~resolve, ~reject) =>
+      onUploadToS3AssertThat(options =>
+        resolve(. Expect.(expect(options) |> toEqual(expected))) |> ignore
+      ) @@
+      (() => RewiredTestModule.uploadWithOptions(rewiredModule))
+    );
   })
 );

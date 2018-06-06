@@ -76,4 +76,4 @@ external uploadWithCallback :
   unit =
   "upload";
 
-[@bs.module "aws-sdk"] [@bs.new] external s3 : unit => t = "S3";
+[@bs.module ("aws-sdk", "AwsSdk")] [@bs.new] external s3 : unit => t = "S3";

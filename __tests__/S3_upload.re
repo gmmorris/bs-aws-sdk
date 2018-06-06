@@ -1,4 +1,10 @@
-open Jest;
+exception InvalidTestFile;
+
+let rewiredModule = () =>
+  switch ([%bs.node __filename]) {
+  | Some(modulePath) => MockAws.Rewiring.rewire(modulePath)
+  | None => raise(InvalidTestFile)
+  };
 
 let uploadWithOptions = () =>
   Aws.S3.s3()
