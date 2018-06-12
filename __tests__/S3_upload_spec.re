@@ -1,4 +1,5 @@
-let rewire = () => [%bs.node __filename] |> Belt.Option.getExn |> S3_upload.Rewiring.rewire;
+let rewire = () =>
+  [%bs.node __filename] |> Belt.Option.getExn |> S3_upload.rewire;
 
 let uploadWithOptions = () =>
   Aws.S3.s3()
@@ -12,5 +13,3 @@ let uploadWithOptions = () =>
          (),
        ),
      );
-
-     
