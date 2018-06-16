@@ -1,6 +1,5 @@
 {
   "name": "@gmmorris/bs-aws-sdk",
-  "version": "0.1.0",
   "bsc-flags": [],
   "suffix": ".bs.js",
   "sources": [

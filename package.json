@@ -13,13 +13,23 @@
     "watch:screen": "screen -c .screenrc"
   },
   "keywords": [
+    "AWS",
+    "S3",
+    "AWS-SDK",
+    "ReasonML",
     "BuckleScript"
   ],
   "files": [
     "src/",
-    "__tests__/",
     "bsconfig.json"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gmmorris/bs-aws-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gmmorris/bs-aws-sdk/issues"
+  },
   "author": "Gidi Morris <gidi@gidi.io>",
   "license": "MIT",
   "devDependencies": {
