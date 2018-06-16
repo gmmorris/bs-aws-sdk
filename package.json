@@ -6,10 +6,10 @@
     "build": "bsb -make-world",
     "start": "bsb -make-world -w",
     "clean": "bsb -clean-world",
-    "unit": "jest .*Test.bs.js",
+    "unit": "jest .*/.*Tests.bs.js",
     "test": "npm run clean && npm run build && npm run unit",
     "watch:bsb": "npm start",
-    "watch:jest": "jest .*Test.bs.js --watchAll",
+    "watch:jest": "jest .*Tests.bs.js --watchAll",
     "watch:screen": "screen -c .screenrc"
   },
   "keywords": [

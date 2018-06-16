@@ -10,7 +10,7 @@ type acl = [
 ];
 
 [@bs.deriving jsConverter]
-type putObjectRequest = {
+type parsedUploadParams = {
   /*  The canned ACL to apply to the object. */
   _ACL: acl,
   /* Object data. */
@@ -24,7 +24,7 @@ type putObjectRequest = {
 };
 
 [@bs.obj]
-external uploadOptions :
+external uploadParams :
   (
     ~_ACL: string=?,
     ~_Body: string=?,
@@ -33,12 +33,12 @@ external uploadOptions :
     ~_Key: string=?,
     unit
   ) =>
-  putObjectRequest =
+  parsedUploadParams =
   "";
 
-let uploadOptions =
+let uploadParams =
     (~accessControlPolicy=?, ~body=?, ~bucket=?, ~contentType=?, ~key=?, ()) =>
-  uploadOptions(
+  uploadParams(
     ~_ACL=?Belt.Option.map(accessControlPolicy, aclToJs),
     ~_Body=?body,
     ~_Bucket=?bucket,
@@ -63,12 +63,12 @@ module ManagedUpload = {
 
 type t;
 
-[@bs.send.pipe: t] external upload : putObjectRequest => unit = "";
+[@bs.send.pipe: t] external upload : parsedUploadParams => unit = "";
 
 [@bs.send.pipe: t]
 external uploadWithCallback :
   (
-    putObjectRequest,
+    parsedUploadParams,
     [@bs.uncurry] (
       (Js.Nullable.t(Js.Exn.t), ManagedUpload.SendData.t) => unit
     )

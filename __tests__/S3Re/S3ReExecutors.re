@@ -1,7 +1,9 @@
+let instanciateS3 = () => Aws.S3.s3();
+
 let uploadWithOptions = () =>
   Aws.S3.s3()
   |> Aws.S3.upload(
-       Aws.S3.uploadOptions(
+       Aws.S3.uploadParams(
          ~accessControlPolicy=`Private,
          ~body="",
          ~bucket="s3Bucket",
@@ -9,6 +11,21 @@ let uploadWithOptions = () =>
          ~key="key",
          (),
        ),
+     );
+
+let uploadWithOptionsAndCallback = () =>
+  Aws.S3.s3()
+  |> Aws.S3.uploadWithCallback(
+       Aws.S3.uploadParams(
+         ~accessControlPolicy=`Private,
+         ~body="",
+         ~bucket="s3Bucket",
+         ~contentType="application/json",
+         ~key="key",
+         (),
+       ),
+       (_, _) =>
+       raise(Invalid_argument("OMG"))
      );
 
 module Tests = {
@@ -19,6 +36,8 @@ module Tests = {
       },
     );
   [@bs.send] external uploadWithOptions : t => unit = "";
+  [@bs.send] external uploadWithOptionsAndCallback : t => unit = "";
+  [@bs.send] external instanciateS3 : t => unit = "";
 };
 
 include Rewire.MakeModuleRewiring(Tests);
