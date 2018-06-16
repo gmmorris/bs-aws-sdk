@@ -1,23 +1,24 @@
-# bs-aws-sdkexpress
+# bs-aws-sdk ![alt TravisCI Build](https://travis-ci.org/gmmorris/bs-aws-sdk.svg?branch=master)
 
-AWS SDK bindings for [BuckleScript](https://github.com/bloomberg/bucklescript) in [Reason](https://github.com/facebook/reason).
+Bindings for the JavaScript AWS SDK for [BuckleScript](https://github.com/bloomberg/bucklescript) in [Reason](https://github.com/aws/aws-sdk-js).
 
-## Getting Started
-Install bs-aws-sdk using npm:
-```
-npm install --save bs-aws-sdk
-```
-Then add bs-aws-sdk as a dependency to `bsconfig.json`
 
-Right now the library is at early stages, pull requests are welcome.
+## Status
+I have only implemented bindings for the AWS S3 upload function, as writing bindings for the AWS SDK is a full time job and so, for now, I'm just implementing what I need..
+*PRs* are more than welcome for additional bindings.
+<br />
 
-### Run the example and tests:
+## Installation
 
-Build and start the server:
+```sh
+npm install --save-dev @gmmorris/bs-aws-sdk
 ```
-npm start
+
+Then add `@gmmorris/bs-aws-sdk` to `bs-dependencies` in your `bsconfig.json`:
+```js
+{
+  ...
+  "bs-dependencies": ["@gmmorris/bs-aws-sdk"]
+}
 ```
-Run the tests:
-```
-npm test
-```
+<br />
